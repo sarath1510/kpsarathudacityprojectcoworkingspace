@@ -5,10 +5,12 @@ For this project, you are a DevOps engineer who will be collaborating with a tea
 
 ## Getting Started
 
+## A SARATH project 
+
 ### Dependencies
 #### Local Environment
 1. Python Environment - run Python 3.6+ applications and install Python dependencies via `pip`
-2. Docker CLI - build and run Docker images locallys
+2. Docker CLI - build and run Docker images locally
 3. `kubectl` - run commands against a Kubernetes cluster
 4. `helm` - apply Helm Charts to a Kubernetes cluster
 
@@ -20,6 +22,8 @@ For this project, you are a DevOps engineer who will be collaborating with a tea
 5. GitHub - pull and clone code
 
 ### Setup
+
+
 #### 1. Configure a Database
 Set up a Postgres database using a Helm Chart.
 
@@ -67,6 +71,52 @@ kubectl port-forward --namespace default svc/<SERVICE_NAME>-postgresql 5432:5432
     PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d postgres -p 5432 < <FILE_NAME.sql>
 ```
 
+### commands executed by me:
+AWS:
+Ensure the AWS CLI is configured correctly.
+aws configure
+aws sts get-caller-identity
+
+
+EKS:creating cluster
+eksctl create cluster --name my-cluster --region us-east-1 --nodegroup-name my-nodes --node-type t3.small --nodes 1 --nodes-min 1 --nodes-max 2
+aws eks --region us-east-1 update-kubeconfig --name my-cluster
+kubectl config current-context
+kubectl config view
+
+---
+eksctl delete cluster --name my-cluster --region us-east-1
+---
+
+kubectl get namespace
+kubectl get storageclass
+kubectl get pods
+
+
+kubectl exec -it postgresql-77d75d45d5-tpx42 -- bash
+psql -U myuser -d mydatabase
+\l 
+\q
+
+kubectl apply -f pvc.yml 
+ kubectl apply -f pv.yml 
+ kubectl apply -f postgresql-deployment.yml 
+ kubectl apply -f postgresql-service.yml
+
+kubectl get svc
+kubectl port-forward service/postgresql-service 5432:5432 &
+
+since i use command prompt:
+set DB_PASSWORD=mypassword
+set PGPASSWORD=%DB_PASSWORD%
+psql --host 127.0.0.1 -U myuser -d mydatabase -p 5432 < 1_create_tables.sql
+psql --host 127.0.0.1 -U myuser -d mydatabase -p 5432 < 2_seed_users.sql
+psql --host 127.0.0.1 -U myuser -d mydatabase -p 5432 < 3_seed_tokens.sql
+
+
+
+
+
 ### 2. Running the Analytics Application Locally
 In the `analytics/` directory:
 
@@ -99,6 +149,33 @@ The benefit here is that it's explicitly set. However, note that the `DB_PASSWOR
 
 * Generate report for check-ins grouped by users
 `curl <BASE_URL>/api/reports/user_visits`
+
+### commands executed by me:
+
+pip install -r requirements.txt
+set POSTGRES_PASSWORD=mypassword
+set DB_USERNAME=myuser
+set DB_PASSWORD=%POSTGRES_PASSWORD%
+set DB_HOST=127.0.0.1
+set DB_PORT=5432
+set DB_NAME=mydatabase
+python app.py
+
+curl 127.0.0.1:5153/api/reports/daily_usage
+curl 127.0.0.1:5153/api/reports/user_visits
+
+## dockerization
+
+docker build -t test-coworking-analytics .
+docker run -p 5153:5153 -e DB_HOST=host.docker.internal -e DB_USERNAME=myuser -e DB_PASSWORD=mypassword -e DB_PORT=5432 -e DB_NAME=mydatabase test-coworking-analytics
+
+curl 127.0.0.1:5153/api/reports/daily_usage
+curl 127.0.0.1:5153/api/reports/user_visits
+--------------
+kubectl apply -f ConfigMap.yaml
+kubectl apply -f secrets.yaml
+kubectl apply -f deployment.yaml
+
 
 ## Project Instructions
 1. Set up a Postgres database with a Helm Chart
