@@ -8,7 +8,7 @@ For this project, you are a DevOps engineer who will be collaborating with a tea
 ### Dependencies
 #### Local Environment
 1. Python Environment - run Python 3.6+ applications and install Python dependencies via `pip`
-2. Docker CLI - build and run Docker images locally
+2. Docker CLI - build and run Docker images locallys
 3. `kubectl` - run commands against a Kubernetes cluster
 4. `helm` - apply Helm Charts to a Kubernetes cluster
 
